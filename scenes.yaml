@@ -1,0 +1,533 @@
+- id: '1705032456040'
+  name: Scn Bedroom Bright
+  entities:
+    light.headboard_strip:
+      effect_list:
+      - Aurora
+      - Bubbling Cauldron
+      - Candy Cane
+      - Christmas
+      - Flicker
+      - Hanukkah
+      - Haunted Mansion
+      - Icicle
+      - Lightning
+      - Ocean
+      - Rainbow
+      - Raindrop
+      - Spring
+      - Valentines
+      supported_color_modes:
+      - brightness
+      - hs
+      color_mode: hs
+      brightness: 255
+      hs_color:
+      - 50
+      - 100
+      rgb_color:
+      - 255
+      - 212
+      - 0
+      xy_color:
+      - 0.498
+      - 0.471
+      effect:
+      friendly_name: Bedroom headboard light strip
+      supported_features: 36
+      state: 'on'
+    light.bedroom_switch:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 209
+      friendly_name: Bedroom switch
+      supported_features: 32
+      state: 'on'
+  icon: mdi:bed-king-outline
+  metadata:
+    light.headboard_strip:
+      entity_only: true
+    light.bedroom_switch:
+      entity_only: true
+- id: '1705032569126'
+  name: Scn Bedroom Dim
+  entities:
+    light.headboard_strip:
+      effect_list:
+      - Aurora
+      - Bubbling Cauldron
+      - Candy Cane
+      - Christmas
+      - Flicker
+      - Hanukkah
+      - Haunted Mansion
+      - Icicle
+      - Lightning
+      - Ocean
+      - Rainbow
+      - Raindrop
+      - Spring
+      - Valentines
+      supported_color_modes:
+      - brightness
+      - hs
+      color_mode: hs
+      brightness: 168
+      hs_color:
+      - 50
+      - 100
+      rgb_color:
+      - 255
+      - 212
+      - 0
+      xy_color:
+      - 0.498
+      - 0.471
+      effect:
+      friendly_name: Bedroom headboard light strip
+      supported_features: 36
+      state: 'on'
+    light.bedroom_switch:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 33
+      friendly_name: Bedroom switch
+      supported_features: 32
+      state: 'on'
+    light.bedroom_matts_night_stand:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - brightness
+      - color_temp
+      - hs
+      - xy
+      icon: hue:table-shade
+      friendly_name: Bedroom Matts night stand
+      supported_features: 0
+      color_mode: hs
+      brightness: 94
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 46.772
+      - 72.835
+      rgb_color:
+      - 255
+      - 214
+      - 69
+      xy_color:
+      - 0.48
+      - 0.454
+      state: 'on'
+  icon: mdi:bed-king
+  metadata:
+    light.headboard_strip:
+      entity_only: true
+    light.bedroom_switch:
+      entity_only: true
+    light.bedroom_matts_night_stand:
+      entity_only: true
+- id: '1705032645548'
+  name: Scn Bedroom Dark
+  entities:
+    light.headboard_strip:
+      effect_list:
+      - Aurora
+      - Bubbling Cauldron
+      - Candy Cane
+      - Christmas
+      - Flicker
+      - Hanukkah
+      - Haunted Mansion
+      - Icicle
+      - Lightning
+      - Ocean
+      - Rainbow
+      - Raindrop
+      - Spring
+      - Valentines
+      supported_color_modes:
+      - brightness
+      - hs
+      color_mode:
+      brightness:
+      hs_color:
+      rgb_color:
+      xy_color:
+      effect:
+      friendly_name: Bedroom headboard light strip
+      supported_features: 36
+      state: 'off'
+    light.bedroom_switch:
+      supported_color_modes:
+      - brightness
+      color_mode:
+      brightness:
+      friendly_name: Bedroom switch
+      supported_features: 32
+      state: 'off'
+    light.bedroom_matts_night_stand:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - brightness
+      - color_temp
+      - hs
+      - xy
+      icon: hue:table-shade
+      friendly_name: Bedroom Matts night stand
+      supported_features: 0
+      color_mode:
+      brightness:
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      rgb_color:
+      xy_color:
+      state: 'off'
+  icon: mdi:brightness-1
+  metadata:
+    light.headboard_strip:
+      entity_only: true
+    light.bedroom_switch:
+      entity_only: true
+    light.bedroom_matts_night_stand:
+      entity_only: true
+- id: '1705032671511'
+  name: Scn Bedroom off
+  entities:
+    light.headboard_strip:
+      effect_list:
+      - Aurora
+      - Bubbling Cauldron
+      - Candy Cane
+      - Christmas
+      - Flicker
+      - Hanukkah
+      - Haunted Mansion
+      - Icicle
+      - Lightning
+      - Ocean
+      - Rainbow
+      - Raindrop
+      - Spring
+      - Valentines
+      supported_color_modes:
+      - brightness
+      - hs
+      color_mode:
+      brightness:
+      hs_color:
+      rgb_color:
+      xy_color:
+      effect:
+      friendly_name: Bedroom headboard light strip
+      supported_features: 36
+      state: 'off'
+    light.bedroom_switch:
+      supported_color_modes:
+      - brightness
+      color_mode:
+      brightness:
+      friendly_name: Bedroom switch
+      supported_features: 32
+      state: 'off'
+    light.bedroom_matts_night_stand:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - brightness
+      - color_temp
+      - hs
+      - xy
+      icon: hue:table-shade
+      friendly_name: Bedroom Matts night stand
+      supported_features: 0
+      color_mode:
+      brightness:
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      rgb_color:
+      xy_color:
+      state: 'off'
+  icon: mdi:brightness-1
+  metadata:
+    light.headboard_strip:
+      entity_only: true
+    light.bedroom_switch:
+      entity_only: true
+    light.bedroom_matts_night_stand:
+      entity_only: true
+- id: '1705485550883'
+  name: P1P fan off
+  entities:
+    fan.printer_cabinet_controller_thermoscreen_override_enable:
+      preset_modes: []
+      percentage: 100
+      percentage_step: 1
+      preset_mode: ''
+      friendly_name: Printer Cabinet controller Thermoscreen Override Enable
+      supported_features: 1
+      state: 'off'
+    light.p1p_chamber_light:
+      supported_color_modes:
+      - onoff
+      color_mode:
+      icon: mdi:led-strip-variant
+      friendly_name: P1P Chamber light
+      supported_features: 0
+      state: 'off'
+  metadata:
+    fan.printer_cabinet_controller_thermoscreen_override_enable:
+      entity_only: true
+    light.p1p_chamber_light:
+      entity_only: true
+- id: '1705485929259'
+  name: P1P fan on
+  entities:
+    fan.printer_cabinet_controller_thermoscreen_override_enable:
+      preset_modes: []
+      percentage: 100
+      percentage_step: 1
+      preset_mode: ''
+      friendly_name: Printer Cabinet controller Thermoscreen Override Enable
+      supported_features: 1
+      state: 'on'
+    light.p1p_chamber_light:
+      supported_color_modes:
+      - onoff
+      color_mode: onoff
+      icon: mdi:led-strip-variant
+      friendly_name: P1P Chamber light
+      supported_features: 0
+      state: 'on'
+    light.printer_cabinet_controller_p1p_led_relay:
+      supported_color_modes:
+      - onoff
+      color_mode: onoff
+      friendly_name: Printer Cabinet controller P1P lED Relay
+      supported_features: 0
+      state: 'on'
+  metadata:
+    fan.printer_cabinet_controller_thermoscreen_override_enable:
+      entity_only: true
+    light.p1p_chamber_light:
+      entity_only: true
+    light.printer_cabinet_controller_p1p_led_relay:
+      entity_only: true
+- id: '1705975640081'
+  name: Lights - kitchen 1 on
+  entities:
+    switch.kitchen_silverware_outlet:
+      friendly_name: Kitchen silverware outlet
+      state: 'off'
+    switch.kitchen_cupboard_switch_1:
+      friendly_name: Kitchen cupboard switch 1
+      state: 'off'
+    switch.kitchen_larder_switch:
+      friendly_name: kitchen larder outlet
+      state: 'on'
+  metadata:
+    switch.kitchen_silverware_outlet:
+      entity_only: true
+    switch.kitchen_cupboard_switch_1:
+      entity_only: true
+- id: '1705975710737'
+  name: 'Lights - kitchen 2 on '
+  entities:
+    switch.kitchen_silverware_outlet:
+      friendly_name: Kitchen silverware outlet
+      state: 'on'
+    update.kitchen_silverware_outlet:
+      auto_update: false
+      installed_version: '4352'
+      in_progress: false
+      latest_version: '4099'
+      release_summary:
+      release_url:
+      skipped_version:
+      title:
+      device_class: firmware
+      entity_picture: https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png
+      friendly_name: Kitchen silverware outlet
+      supported_features: 1
+      state: 'off'
+    switch.kitchen_cupboard_switch_1:
+      friendly_name: Kitchen cupboard switch 1
+      state: 'off'
+    switch.kitchen_larder_switch:
+      friendly_name: kitchen larder outlet
+      state: 'on'
+  metadata:
+    switch.kitchen_cupboard_switch_1:
+      entity_only: true
+- id: '1705975729691'
+  name: Lights - kitchen all on
+  entities:
+    switch.kitchen_silverware_outlet:
+      friendly_name: Kitchen silverware outlet
+      state: 'on'
+    update.kitchen_silverware_outlet:
+      auto_update: false
+      installed_version: '4352'
+      in_progress: false
+      latest_version: '4099'
+      release_summary:
+      release_url:
+      skipped_version:
+      title:
+      device_class: firmware
+      entity_picture: https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png
+      friendly_name: Kitchen silverware outlet
+      supported_features: 1
+      state: 'off'
+    switch.kitchen_cupboard_switch_1:
+      friendly_name: Kitchen cupboard switch 1
+      state: 'on'
+    switch.kitchen_larder_switch:
+      friendly_name: kitchen larder outlet
+      state: 'on'
+  metadata:
+    switch.kitchen_cupboard_switch_1:
+      entity_only: true
+- id: '1705975783036'
+  name: Lights - kitchen all off
+  entities:
+    switch.kitchen_silverware_outlet:
+      friendly_name: Kitchen silverware outlet
+      state: 'off'
+    update.kitchen_silverware_outlet:
+      auto_update: false
+      installed_version: '4352'
+      in_progress: false
+      latest_version: '4099'
+      release_summary:
+      release_url:
+      skipped_version:
+      title:
+      device_class: firmware
+      entity_picture: https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png
+      friendly_name: Kitchen silverware outlet
+      supported_features: 1
+      state: 'off'
+    switch.kitchen_cupboard_switch_1:
+      friendly_name: Kitchen cupboard switch 1
+      state: 'off'
+    switch.kitchen_larder_switch:
+      friendly_name: kitchen larder outlet
+      state: 'off'
+  metadata:
+    switch.kitchen_cupboard_switch_1:
+      entity_only: true
+- id: '1706439245936'
+  name: Floor lamp off
+  entities:
+    light.family_room_floor_light_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - hs
+      - xy
+      color_mode:
+      brightness:
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      rgb_color:
+      xy_color:
+      friendly_name: Family Room floor light bulb MATTER
+      supported_features: 32
+      state: 'off'
+    light.floor_lamp_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 9009
+      min_mireds: 111
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - hs
+      color_mode:
+      brightness:
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      rgb_color:
+      xy_color:
+      friendly_name: floor lamp
+      supported_features: 32
+      state: 'off'
+  metadata:
+    light.family_room_floor_light_2:
+      entity_only: true
+  icon: mdi:floor-lamp
+- id: '1706439337393'
+  name: Floor lamp on
+  entities:
+    light.family_room_floor_light_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - hs
+      - xy
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2500
+      color_temp: 400
+      hs_color:
+      - 28.874
+      - 72.522
+      rgb_color:
+      - 255
+      - 159
+      - 70
+      xy_color:
+      - 0.546
+      - 0.389
+      friendly_name: Family Room floor light bulb MATTER
+      supported_features: 32
+      state: 'on'
+    light.floor_lamp_2:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 9009
+      min_mireds: 111
+      max_mireds: 500
+      supported_color_modes:
+      - color_temp
+      - hs
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2500
+      color_temp: 400
+      hs_color:
+      - 28.874
+      - 72.522
+      rgb_color:
+      - 255
+      - 159
+      - 70
+      xy_color:
+      - 0.546
+      - 0.389
+      friendly_name: floor lamp
+      supported_features: 32
+      state: 'on'
+  metadata:
+    light.family_room_floor_light_2:
+      entity_only: true
+  icon: mdi:floor-lamp

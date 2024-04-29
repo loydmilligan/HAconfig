@@ -1,0 +1,49 @@
+sensor:
+  - platform: ohmconnect
+    id: a2QVVowy
+    name: ohmhour
+  - platform: illuminance
+    # Name of new sensor entity
+    name: Home Outdoor Illuminance
+    # Existing entity that provides current weather conditions
+    entity_id: weather.forecast_home
+    fallback: 4
+#    mode: simple
+
+  - platform: history_stats
+    name: "3D Print time today"
+    unique_id: PAR0016
+    entity_id: sensor.p1p_current_stage
+    state: "printing"
+    type: time
+    end: "{{ (now().replace(minute=0, second=0, microsecond=0) + timedelta(hours=21)).replace(hour=3) }}"
+    duration:
+        hours: 24
+  - platform: history_stats
+    name: "Record play time today"
+    unique_id: PAR0017
+    entity_id: sensor.record_player_status
+    state: "Playing"
+    type: time
+    end: "{{ (now().replace(minute=0, second=0, microsecond=0) + timedelta(hours=21)).replace(hour=3) }}"
+    duration:
+        hours: 24
+# Example configuration.yaml entry
+  - platform: discogs
+    token: "OrDekxwKOljATIHFARDczPWSCBkcjgpCXFzrqIhN"
+    name: "Discogs info"
+    monitored_conditions:
+      - collection
+      - random_record
+
+
+# Example configuration.yaml entry
+command_line:
+  - sensor:
+      name: Random Discogs
+#      json_attributes:
+#       - title
+#       - artists.name
+#       - cover_image
+      command: 'python3 python_scripts/discogsrequest.py' 
+      value_template: "{{ value  }}"    

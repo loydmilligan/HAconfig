@@ -1,0 +1,9 @@
+## Notification Groups ##
+notify:
+  - platform: group
+    name: mattara phones
+    services:
+      - service: mobile_app_motorola_razr_plus_2023
+      - service: mobile_app_pixel_6
+      - service: mobil_app_matts_watch
+      - service: mobial_app_google_watch_2

@@ -1,0 +1,2366 @@
+- id: '1697855864398'
+  alias: Light Luggage Closet
+  description: 'The light in luggage closet turns on when the door opens with 1 second
+    transition to 100% brightness.  It turns off when the door closes or the door
+    is ajar for 3 minutes with 3 second transition.  '
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 874cb147e01f72ebfbc52a0e195ec577
+    entity_id: 07914ff5064bf520bd337a5696625378
+    domain: binary_sensor
+    id: door opened
+  - type: not_opened
+    platform: device
+    device_id: 874cb147e01f72ebfbc52a0e195ec577
+    entity_id: 07914ff5064bf520bd337a5696625378
+    domain: binary_sensor
+    id: door closed
+  - platform: state
+    entity_id:
+    - binary_sensor.misc_contact_sensor_contact
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    id: Door ajar
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - door opened
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+          transition: 1
+        target:
+          entity_id:
+          - light.luggage_room_light
+    - conditions:
+      - condition: trigger
+        id:
+        - door closed
+        - Door ajar
+      sequence:
+      - service: light.turn_off
+        data:
+          transition: 3
+        target:
+          entity_id:
+          - light.luggage_room_light
+  mode: single
+- id: '1697959559387'
+  alias: Lights 3D printer cabinet
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 25caee0e3ac85c84c2bc09e68ccea4fc
+    entity_id: a3ebce71678c53d156a103a6fc3f1f66
+    domain: binary_sensor
+    id: Opened
+  - type: not_opened
+    platform: device
+    device_id: 25caee0e3ac85c84c2bc09e68ccea4fc
+    entity_id: a3ebce71678c53d156a103a6fc3f1f66
+    domain: binary_sensor
+    id: Closed
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Opened
+      sequence:
+      - type: turn_on
+        device_id: eb3c532d394e12697b974e8c935da9d5
+        entity_id: e3ecb396b234a19b620e9049c14138ca
+        domain: light
+      - service: light.turn_on
+        data: {}
+        target:
+          entity_id:
+          - light.p1p_chamber_light
+    - conditions:
+      - condition: trigger
+        id:
+        - Closed
+      sequence:
+      - type: turn_off
+        device_id: eb3c532d394e12697b974e8c935da9d5
+        entity_id: e3ecb396b234a19b620e9049c14138ca
+        domain: light
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.p1p_chamber_light
+  mode: single
+- id: '1698997142499'
+  alias: Light Sheet Closet
+  description: 'The light in sheet closet turns on when the door opens with 1 second
+    transition to 100% brightness.  It turns off when the door closes or the door
+    is ajar for 3 minutes with 3 second transition.  '
+  trigger:
+  - type: opened
+    platform: device
+    device_id: a5bc9b95a242d077434f6d704d7ffb95
+    entity_id: b02255c93bdffc8e69e43b59f5471380
+    domain: binary_sensor
+    id: door opened
+  - type: not_opened
+    platform: device
+    device_id: a5bc9b95a242d077434f6d704d7ffb95
+    entity_id: b02255c93bdffc8e69e43b59f5471380
+    domain: binary_sensor
+    id: door closed
+  - platform: state
+    entity_id:
+    - binary_sensor.mash_closet_door
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+    id: Door ajar
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - door opened
+      sequence:
+      - service: light.turn_on
+        data: {}
+        target:
+          entity_id:
+          - light.sheet_closet
+    - conditions:
+      - condition: trigger
+        id:
+        - door closed
+        - Door ajar
+      sequence:
+      - service: light.turn_off
+        data:
+          transition: 3
+        target:
+          entity_id:
+          - light.sheet_closet
+  mode: single
+- id: '1699173981025'
+  alias: Schedule toggles bedtime boolean
+  description: Turns on the bedtime toggle at 2am and turns it off at 9am
+  trigger:
+  - platform: time
+    at: 02:00:00
+    id: Bedtime starts
+  - platform: time
+    at: 09:00:00
+    id: Bedtime Ends
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Bedtime Ends
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.bedtime
+    - conditions:
+      - condition: trigger
+        id:
+        - Bedtime starts
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.bedtime
+      - service: input_select.select_option
+        target:
+          entity_id: input_select.mode_select
+        data:
+          option: Bedtime
+  mode: single
+- id: '1699266172771'
+  alias: Schedule Bedroom Ikea Cover open/close
+  description: Cover closes at 9pm. Cover opens at 2pm
+  trigger:
+  - platform: time
+    at: '21:00:00'
+    id: its 9pm
+  - platform: time
+    at: '14:00:00'
+    id: its 2pm
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - its 9pm
+      sequence:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id: cover.ikea_blinds
+    - conditions:
+      - condition: trigger
+        id:
+        - its 2pm
+      sequence:
+      - service: cover.open_cover
+        data: {}
+        target:
+          entity_id: cover.ikea_blinds
+  mode: single
+- id: '1699359702804'
+  alias: 'Power Bedtime '
+  description: 'Turns devices off and on (currently set to 2am and 9am)
+
+    Dependent on Bedtime boolean (based on Schedule toggles bedtime automation)'
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.bedtime
+    to: 'on'
+    from: 'off'
+    id: Bedtime begins
+  - platform: state
+    entity_id:
+    - input_boolean.bedtime
+    to: 'off'
+    id: Bedtime over
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Bedtime begins
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.office_overhead_lights
+          - light.family_room_floor_light_2
+          - light.headboard_strip
+          - light.hearth_lights
+          - light.gallery_lights
+          - light.hall_light
+          - light.ledindicator_indicator
+          - light.sheet_closet
+          - light.laundry_ceiling
+          - light.kitchen_larder_outlet
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.turntable
+          - switch.kitchen_silverware_outlet
+      - if:
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: sensor.p1p_print_status
+            state: running
+        then:
+        - service: switch.turn_off
+          data: {}
+          target:
+            entity_id: switch.3dprinter
+        else:
+        - wait_for_trigger:
+          - platform: device
+            device_id: 08801960e7ea18e527b4e4b0f6c54689
+            domain: bambu_lab
+            type: event_print_finished
+        - service: switch.turn_off
+          data: {}
+          target:
+            entity_id: switch.3dprinter
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id:
+        - Bedtime over
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id:
+          - switch.kasa_plug_office
+          - switch.turntable
+  mode: single
+- id: '1699426278552'
+  alias: BG Process Washing Machine Always On
+  description: ''
+  use_blueprint:
+    path: beauwest/always_on_switch.yaml
+    input:
+      target_switch: switch.laundry_room_washing_machine_outlet
+- id: '1699426303941'
+  alias: BG Process Dryer Always On
+  description: ''
+  use_blueprint:
+    path: beauwest/always_on_switch.yaml
+    input:
+      target_switch: switch.laundry_room_dryer_outlet
+- id: '1699426321665'
+  alias: BG Process Dishwasher Always On
+  description: ''
+  use_blueprint:
+    path: beauwest/always_on_switch.yaml
+    input:
+      target_switch: switch.kitchen_dishwasher_outlet
+- id: '1702721920716'
+  alias: Button Family Room floor lamp
+  description: Toggles floor lamp light and Kasa outlet (uses script).
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 8457883f00d2ce3781a9f2ed3479352b
+    entity_id: 499eb95a7857b4f7de6c66e39402e4ab
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: script.family_room_floor_lamp_toggle
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1703752461893'
+  alias: Service z2m permit join timer
+  description: Allows control of Zigbee 2 MQTT through Home Assistant UI
+  trigger:
+  - platform: mqtt
+    topic: zigbee2mqtt/bridge/request/permit_join
+    payload: 'true'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: input_number.zigbee2mqtt_join_minutes
+        above: 0
+        below: 2
+      sequence:
+      - service: timer.start
+        target:
+          entity_id: timer.zigbee2mqtt_bridge_permit_join_time
+        data:
+          duration: 00:01:00
+    - conditions:
+      - condition: numeric_state
+        entity_id: input_number.zigbee2mqtt_join_minutes
+        above: 1
+        below: 3
+      sequence:
+      - service: timer.start
+        target:
+          entity_id: timer.zigbee2mqtt_bridge_permit_join_time
+        data:
+          duration: 00:02:00
+    - conditions:
+      - condition: numeric_state
+        entity_id: input_number.zigbee2mqtt_join_minutes
+        above: 2
+        below: 4
+      sequence:
+      - service: timer.start
+        target:
+          entity_id: timer.zigbee2mqtt_bridge_permit_join_time
+        data:
+          duration: 00:03:00
+    - conditions:
+      - condition: numeric_state
+        entity_id: input_number.zigbee2mqtt_join_minutes
+        above: 3
+        below: 5
+      sequence:
+      - service: timer.start
+        target:
+          entity_id: timer.zigbee2mqtt_bridge_permit_join_time
+        data:
+          duration: 00:04:00
+    - conditions:
+      - condition: numeric_state
+        entity_id: input_number.zigbee2mqtt_join_minutes
+        above: 4
+      sequence:
+      - service: timer.start
+        target:
+          entity_id: timer.zigbee2mqtt_bridge_permit_join_time
+        data:
+          duration: 00:05:00
+  mode: single
+- id: '1703970291061'
+  alias: '*Button Bathroom Hue tap '
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: d60569cf6a8308954c54a58bb1114db2
+    type: action
+    subtype: press_3
+    discovery_id: 0x0000000000400b4b action_press_3
+    id: 3 pressed
+  - platform: device
+    domain: mqtt
+    device_id: d60569cf6a8308954c54a58bb1114db2
+    type: action
+    subtype: press_1
+    discovery_id: 0x0000000000400b4b action_press_1
+    id: 1 pressed
+  - platform: device
+    domain: mqtt
+    device_id: d60569cf6a8308954c54a58bb1114db2
+    type: action
+    subtype: press_4
+    discovery_id: 0x0000000000400b4b action_press_4
+    id: 4 pressed
+  - platform: device
+    domain: mqtt
+    device_id: d60569cf6a8308954c54a58bb1114db2
+    type: action
+    subtype: press_2
+    discovery_id: 0x0000000000400b4b action_press_2
+    id: 2 pressed
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - 1 pressed
+      sequence:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.bathroom_ceiling_light
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.bathroom_automation_bypass
+    - conditions:
+      - condition: trigger
+        id:
+        - 3 pressed
+      sequence:
+      - service: light.toggle
+        target:
+          entity_id:
+          - light.bathroom_ceiling_light
+        data:
+          flash: short
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.bathroom_automation_bypass
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - 4 pressed
+      sequence:
+      - if:
+        - condition: state
+          state: 'on'
+          entity_id: light.bathroom_ceiling_light
+        then:
+        - service: light.turn_on
+          metadata: {}
+          data:
+            brightness_step_pct: 5
+          target:
+            entity_id:
+            - light.bathroom_ceiling_light
+    - conditions:
+      - condition: trigger
+        id:
+        - 2 pressed
+      sequence:
+      - if:
+        - condition: state
+          entity_id: light.bathroom_ceiling_light
+          state: 'on'
+        then:
+        - service: light.turn_on
+          metadata: {}
+          data:
+            brightness_step_pct: -6
+          target:
+            entity_id:
+            - light.bathroom_ceiling_light
+  mode: single
+- id: '1704091202119'
+  alias: Button headboard control
+  description: Button on dresser
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 8ebe93df69d17c6c4cbb317130e71b11
+    type: click
+    subtype: single
+    discovery_id: 0x00158d000abd8e20 click_single
+    id: single click
+  - platform: device
+    domain: mqtt
+    device_id: 8ebe93df69d17c6c4cbb317130e71b11
+    type: click
+    subtype: double
+    discovery_id: 0x00158d000abd8e20 click_double
+    id: double click
+  - platform: device
+    domain: mqtt
+    device_id: 8ebe93df69d17c6c4cbb317130e71b11
+    type: action
+    subtype: hold
+    discovery_id: 0x00158d000abd8e20 action_hold
+    id: held
+  - platform: device
+    domain: mqtt
+    device_id: 8ebe93df69d17c6c4cbb317130e71b11
+    type: action
+    subtype: release
+    discovery_id: 0x00158d000abd8e20 action_release
+    id: release
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - single click
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.headboard_strip
+    - conditions:
+      - condition: trigger
+        id:
+        - double click
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.bedroom_matts_night_stand
+  mode: single
+- id: '1704435588669'
+  alias: 'Button Family Room fan '
+  description: 'Single toggles kasablanca fan. Double and hold unassigned '
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 2ca325323e47f01d2a5dfb75e0b565de
+    type: action
+    subtype: single
+    discovery_id: 0x00158d000abd8e52 action_single
+    id: Single
+  - platform: device
+    domain: mqtt
+    device_id: 2ca325323e47f01d2a5dfb75e0b565de
+    type: action
+    subtype: double
+    discovery_id: 0x00158d000abd8e52 action_double
+    id: Double
+  - platform: device
+    domain: mqtt
+    device_id: 2ca325323e47f01d2a5dfb75e0b565de
+    type: action
+    subtype: release
+    discovery_id: 0x00158d000abd8e52 action_release
+    id: release
+  - platform: device
+    domain: mqtt
+    device_id: 2ca325323e47f01d2a5dfb75e0b565de
+    type: action
+    subtype: hold
+    discovery_id: 0x00158d000abd8e52 action_hold
+    id: hold
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Single
+      sequence:
+      - service: fan.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id: fan.family_room_fan
+  mode: single
+- id: '1704850456715'
+  alias: Button Hallway dial
+  description: '1 press release - toggle hallway
+
+    2 PR - toggle headboard
+
+    3 PR - toggle office ceiling
+
+    4 PR - toggle family room '
+  use_blueprint:
+    path: freakshock88/philips_hue_tap_dial_switch_zigbee2mqtt_actions_blueprint.yaml
+    input:
+      button_sensor: sensor.hallway_tap_dial_hallway_tap_dial_action
+      remote_button_1_hold: []
+      remote_button_1_single_press: []
+      remote_button_1_press_release:
+      - if:
+        - condition: state
+          entity_id: input_boolean.mode_select
+          state: 'off'
+        then:
+        - service: light.toggle
+          metadata: {}
+          data:
+            transition: 251
+            kelvin: 2714
+            brightness_pct: 69
+          target:
+            entity_id:
+            - light.hall_light
+      - service: input_select.select_option
+        metadata: {}
+        data:
+          option: Hallway
+        target:
+          entity_id: input_select.room_lights_for_dial
+      remote_button_3_press_release:
+      - service: light.toggle
+        metadata: {}
+        data:
+          transition: 2
+          kelvin: 2327
+          brightness_pct: 69
+        target:
+          entity_id: light.office_overhead_lights
+      - service: input_select.select_option
+        metadata: {}
+        data:
+          option: Office
+        target:
+          entity_id: input_select.room_lights_for_dial
+      remote_button_2_press_release:
+      - choose:
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: and
+              conditions:
+              - condition: state
+                entity_id: light.bathroom_ceiling_light
+                state: 'on'
+              - condition: state
+                entity_id: light.laundry_ceiling
+                state: 'off'
+            - condition: and
+              conditions:
+              - condition: state
+                entity_id: light.bathroom_ceiling_light
+                state: 'off'
+              - condition: state
+                entity_id: light.laundry_ceiling
+                state: 'on'
+          sequence:
+          - service: light.toggle
+            metadata: {}
+            data:
+              transition: 2
+              kelvin: 2327
+              brightness_pct: 69
+            target:
+              entity_id:
+              - light.bathroom_ceiling_light
+          - service: input_select.select_option
+            metadata: {}
+            data:
+              option: Bathroom
+            target:
+              entity_id: input_select.room_lights_for_dial
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: and
+              conditions:
+              - condition: state
+                entity_id: light.bathroom_ceiling_light
+                state: 'on'
+              - condition: state
+                entity_id: light.laundry_ceiling
+                state: 'on'
+            - condition: and
+              conditions:
+              - condition: state
+                entity_id: light.bathroom_ceiling_light
+                state: 'off'
+              - condition: state
+                entity_id: light.laundry_ceiling
+                state: 'off'
+          sequence:
+          - service: light.toggle
+            metadata: {}
+            data:
+              transition: 300
+              kelvin: 2327
+              brightness_pct: 69
+            target:
+              entity_id:
+              - light.bathroom_ceiling_light
+              - light.laundry_ceiling
+          - service: input_select.select_option
+            metadata: {}
+            data:
+              option: Bathroom
+            target:
+              entity_id: input_select.room_lights_for_dial
+      remote_button_4_press_release:
+      - service: light.toggle
+        metadata: {}
+        data:
+          kelvin: 2327
+          brightness_pct: 100
+          transition: 2
+        target:
+          entity_id:
+          - light.hearth_lights
+          - light.gallery_lights
+      - service: input_select.select_option
+        metadata: {}
+        data:
+          option: Family
+        target:
+          entity_id: input_select.room_lights_for_dial
+      remote_button_4_single_press: []
+      remote_button_4_hold_release: []
+      remote_dial_rotate_right_step:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 3
+            target:
+              entity_id: light.hall_light
+              area_id: laundry_room
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Bedroom
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 3
+            target:
+              entity_id: light.headboard_strip
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Office
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 3
+            target:
+              entity_id: light.office_overhead_lights
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Family
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 3
+            target:
+              area_id: family_room
+      remote_dial_rotate_right_slow:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 5
+            target:
+              entity_id: light.hall_light
+              area_id: laundry_room
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Bedroom
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 5
+            target:
+              entity_id: light.headboard_strip
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Office
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 5
+            target:
+              entity_id: light.office_overhead_lights
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Family
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 5
+            target:
+              area_id: family_room
+      remote_dial_rotate_right_fast:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 7
+            target:
+              entity_id: light.hall_light
+              area_id: laundry_room
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Bedroom
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 7
+            target:
+              entity_id: light.headboard_strip
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Office
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 7
+            target:
+              entity_id: light.office_overhead_lights
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Family
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: 7
+            target:
+              area_id: family_room
+      remote_dial_rotate_left_step:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -3
+            target:
+              entity_id: light.hall_light
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -3
+            target:
+              entity_id:
+              - light.bathroom_ceiling_light
+              - light.laundry_ceiling
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Office
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -3
+            target:
+              entity_id: light.office_overhead_lights
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Family
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -3
+            target:
+              area_id: family_room
+      remote_dial_rotate_left_slow:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -5
+            target:
+              entity_id: light.hall_light
+              area_id: laundry_room
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Bedroom
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -5
+            target:
+              entity_id: light.headboard_strip
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Office
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -5
+            target:
+              entity_id: light.office_overhead_lights
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Family
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -5
+            target:
+              area_id: family_room
+      remote_dial_rotate_left_fast:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Laundry
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -7
+            target:
+              entity_id: light.hall_light
+              area_id: laundry_room
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Bedroom
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -9
+            target:
+              entity_id: light.headboard_strip
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Office
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -7
+            target:
+              entity_id: light.office_overhead_lights
+        - conditions:
+          - condition: state
+            entity_id: input_select.room_lights_for_dial
+            state: Family
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              brightness_step_pct: -7
+            target:
+              area_id: family_room
+      remote_button_4_hold:
+      - service: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.ledindicator_indicator
+      remote_button_2_single_press: []
+- id: '1704851318877'
+  alias: Notification Doors left open
+  description: ''
+  use_blueprint:
+    path: SirGoodenough/door_open_tts_cloud_say_and_Piper_announcer_Piper_OR_nabu_casa_required.yaml
+    input:
+      piper_voice: en_US-lessac-medium
+      tts_service: nabu
+      door_entity:
+      - binary_sensor.back_door_contact
+      reminded: input_boolean.thank_you_door_close
+      speaker_target:
+      - media_player.laundry_room_nest
+      - media_player.display_for_controls
+      speaker_gender: male
+      cooldown: 120
+      speaker_voice: SteffanNeural
+- id: '1705116159680'
+  alias: Button Family Room Hue wall switch
+  description: 'Left switch toggles hearth lights. Right switch toggles gallery lights. '
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 0ddd3907783ba5825f54a5cddc566b0c
+    type: action
+    subtype: left_press
+    discovery_id: 0x001788010b0365c4 action_left_press
+    id: Left press
+  - platform: device
+    domain: mqtt
+    device_id: 0ddd3907783ba5825f54a5cddc566b0c
+    type: action
+    subtype: right_press
+    discovery_id: 0x001788010b0365c4 action_right_press
+    id: Right press
+  - platform: device
+    domain: mqtt
+    device_id: 0ddd3907783ba5825f54a5cddc566b0c
+    type: action
+    subtype: right_press_release
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Left press
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data:
+          brightness: 227
+        target:
+          entity_id: light.hearth_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Right press
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data:
+          brightness: 227
+        target:
+          entity_id:
+          - light.gallery_lights
+  mode: single
+- id: '1705545892721'
+  alias: Lights Laundry Room
+  description: "5 minute No motion \nMotion blocker is Laundry Room Auto Bypass On
+    - meaning when that boolean is on, the light will turn on with motion, but fail
+    to turn off after the delay"
+  use_blueprint:
+    path: networkingcat/yet_another_motion_automation.yaml
+    input:
+      motion_entity: binary_sensor.laundry_motion_occupancy
+      no_motion_wait: 10
+      no_motion_blocker_boolean: false
+      light_target:
+        entity_id: light.laundry_ceiling
+- id: '1705579417306'
+  alias: '*BG Process Bypass resets'
+  description: 'Bedroom - 30 min
+
+    Bathroom - 30 min
+
+    Laundry room - 10 min'
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.bathroom_automation_bypass
+    to: 'on'
+    id: Bathroom on
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  - platform: state
+    entity_id:
+    - input_boolean.laundry_room_automation_bypass
+    to: 'on'
+    id: Laundry on
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  - platform: state
+    entity_id:
+    - input_boolean.bedroom_automation_bypass
+    to: 'on'
+    id: Bedroom on
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  - platform: state
+    entity_id:
+    - input_boolean.office_automation_bypass
+    to: 'on'
+    id: Office on
+    for:
+      hours: 2
+      minutes: 1
+      seconds: 0
+  - platform: state
+    entity_id:
+    - input_boolean.office_automation_bypass
+    to: 'on'
+    id: Office on
+    for:
+      hours: 1
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Laundry on
+      sequence:
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.laundry_room_automation_bypass
+    - conditions:
+      - condition: trigger
+        id:
+        - Bedroom on
+      sequence:
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.bedroom_automation_bypass
+    - conditions:
+      - condition: trigger
+        id:
+        - Bathroom on
+      sequence:
+      - service: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.bathroom_automation_bypass
+    - conditions:
+      - condition: trigger
+        id:
+        - Office on
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.office_automation_bypass
+        data: {}
+  mode: single
+- id: '1705808635555'
+  alias: Lights headboard on recurring time
+  description: 11pm - headboard lights on, overhead light off
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition: []
+  action:
+  - service: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.bedroom_switch
+  - service: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.headboard_strip
+  mode: single
+- id: '1705813456275'
+  alias: Button Office Hue Dimmer
+  description: ''
+  use_blueprint:
+    path: patpac9/Hue_Dimmer_Switch_Easy_Custom_Buttons.yaml
+    input:
+      controller: Office dimmer
+      on_released:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+        target:
+          entity_id: light.office_overhead_lights
+      up_released:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: 7
+        target:
+          entity_id: light.office_overhead_lights
+      down_released:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          brightness_step_pct: -7
+        target:
+          entity_id: light.office_overhead_lights
+      off_released:
+      - service: light.turn_off
+        metadata: {}
+        data:
+          transition: 2
+        target:
+          entity_id: light.office_overhead_lights
+- id: '1705975422182'
+  alias: 'Button Kitchen Cabinets '
+  description: Controls lights under cabinets.
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 4191342875ee83a6d12483054325ebec
+    type: action
+    subtype: long
+    discovery_id: 0x00124b0029286139 action_long
+    id: Long
+  - platform: device
+    domain: mqtt
+    device_id: 4191342875ee83a6d12483054325ebec
+    type: action
+    subtype: single
+    discovery_id: 0x00124b0029286139 action_single
+    id: Single
+  - platform: device
+    domain: mqtt
+    device_id: 4191342875ee83a6d12483054325ebec
+    type: action
+    subtype: double
+    discovery_id: 0x00124b0029286139 action_double
+    id: 'Double '
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Single
+      sequence:
+      - if:
+        - condition: state
+          state: 'off'
+          entity_id: switch.kitchen_under_cabinet_lights
+        then:
+        - service: switch.turn_on
+          target:
+            entity_id:
+            - switch.kitchen_silverware_outlet
+            - switch.kitchen_cupboard_switch_1
+            - switch.kitchen_larder_switch
+          data: {}
+      - if:
+        - condition: state
+          state: 'on'
+          entity_id: switch.kitchen_under_cabinet_lights
+        then:
+        - service: switch.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id:
+            - switch.kitchen_silverware_outlet
+            - switch.kitchen_cupboard_switch_1
+            - switch.kitchen_larder_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - Long
+      sequence:
+      - service: script.toggle_kitchen_lights
+        metadata: {}
+        data: {}
+  mode: single
+- id: '1706228460510'
+  alias: 'Button Laundry Room '
+  description: Toggles lights
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 8e94ec6ea29c09ad6d9830d6059e212c
+    type: action
+    subtype: double
+  - platform: device
+    domain: mqtt
+    device_id: 8e94ec6ea29c09ad6d9830d6059e212c
+    type: action
+    subtype: double
+  - platform: device
+    domain: mqtt
+    device_id: 8e94ec6ea29c09ad6d9830d6059e212c
+    type: action
+    subtype: double
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - single
+      sequence:
+      - service: light.toggle
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - light.laundry_ceiling
+    - conditions:
+      - condition: trigger
+        id:
+        - double
+      sequence: []
+    - conditions:
+      - condition: trigger
+        id:
+        - held
+      sequence: []
+  mode: single
+- id: '1706230172381'
+  alias: 'Ohm turn on '
+  description: 'Turn on devices before ohm hours '
+  trigger:
+  - platform: time
+    at: input_datetime.ohm_hour_start
+  condition: []
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id:
+      - switch.kasa_plug_office
+      - switch.sheet_closet
+      - switch.kasa_plug_office_2
+      - switch.6strip_outlet_1
+      - switch.6strip_floor_lamp_6
+      - switch.6strip_outlet_2
+      - switch.6strip_outlet_4
+      - switch.6strip_outlet_5
+      - switch.6strip_tv_chast_3
+      - switch.desk_power_strip_outlet
+      - switch.kitchen_larder_switch
+    data: {}
+  - service: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - light.headboard_strip
+      - light.bedroom_switch
+  - service: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: climate.office
+  - service: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: fan_only
+  mode: single
+- id: '1706291573336'
+  alias: '*Lights Aqara fp2 '
+  description: Family room and office
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.fp2_1_office_group_presence
+    to: 'off'
+    id: Office Cleared
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  - type: occupied
+    platform: device
+    device_id: 72dbaaa8301bb81d1b90a32c230dfe33
+    entity_id: 202c7ac86fac09baab9e55cfd1b70888
+    domain: binary_sensor
+    id: Family on
+    enabled: false
+  - type: not_occupied
+    platform: device
+    device_id: 72dbaaa8301bb81d1b90a32c230dfe33
+    entity_id: 202c7ac86fac09baab9e55cfd1b70888
+    domain: binary_sensor
+    id: Family off
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  - platform: state
+    entity_id:
+    - binary_sensor.family_room_presence_group
+    to: 'on'
+    id: Family on
+  - type: occupied
+    platform: device
+    device_id: 630d2213a62e48d38aebc9f428e4a32c
+    entity_id: d41184e6f12f5b7c57b1e7df3d893032
+    domain: binary_sensor
+    id: Office detected
+  - type: occupied
+    platform: device
+    device_id: 630d2213a62e48d38aebc9f428e4a32c
+    entity_id: 43433dd1cd8d6672bbdd9089f54fef58
+    domain: binary_sensor
+    id: Office detected
+  - type: occupied
+    platform: device
+    device_id: 630d2213a62e48d38aebc9f428e4a32c
+    entity_id: d7a95f45f51f5b15eb371b2bb0edb83d
+    domain: binary_sensor
+    id: Office detected
+  - type: occupied
+    platform: device
+    device_id: 72dbaaa8301bb81d1b90a32c230dfe33
+    entity_id: 22e7d10f5767ab6f53646eee22555609
+    domain: binary_sensor
+    id: Office detected
+  condition:
+  - condition: time
+    after: '12:00:00'
+    before: 02:00:00
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Office detected
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.office_overhead_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Office Cleared
+      sequence:
+      - if:
+        - condition: state
+          entity_id: input_boolean.office_automation_bypass
+          state: 'off'
+        then:
+        - service: light.turn_off
+          metadata: {}
+          data:
+            transition: 3
+          target:
+            entity_id: light.office_overhead_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Family on
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - light.hearth_lights
+          - light.gallery_lights
+    - conditions:
+      - condition: trigger
+        id:
+        - Family off
+      sequence:
+      - if:
+        - condition: state
+          entity_id: input_boolean.family_room_bypass
+          state: 'off'
+        then:
+        - service: light.turn_off
+          metadata: {}
+          data:
+            transition: 2
+          target:
+            entity_id:
+            - light.gallery_lights
+            - light.hearth_lights
+  mode: single
+- id: '1706355153086'
+  alias: Printer P1P fan controller
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.p1p_lower_enclosure_temperature
+    above: 40
+    id: Above 40
+  - platform: numeric_state
+    entity_id:
+    - sensor.p1p_lower_enclosure_temperature
+    id: Below 40
+    below: 40
+  condition:
+  - condition: state
+    entity_id: sensor.p1p_print_status
+    state: running
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Above 40
+      sequence:
+      - service: fan.turn_on
+        target:
+          entity_id:
+          - fan.printer_cabinet_controller_thermoscreen_override_enable
+          - fan.p1p_chamber_fan
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - Below 40
+      - condition: state
+        entity_id: fan.p1p_chamber_fan
+        state: 'on'
+      sequence:
+      - service: fan.turn_off
+        target:
+          entity_id:
+          - fan.printer_cabinet_controller_thermoscreen_override_enable
+          - fan.p1p_chamber_fan
+        data: {}
+  mode: single
+- id: '1706586671171'
+  alias: 'Lights Family Room Now Playing '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.record_player_status
+    to: 'On'
+    id: 'On'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  - platform: state
+    entity_id:
+    - sensor.record_player_status
+    to: Playing
+    id: Playing
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Playing
+      sequence:
+      - service: switch.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.tasmota
+    - conditions:
+      - condition: trigger
+        id:
+        - 'On'
+      sequence:
+      - service: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.tasmota
+  mode: single
+- id: '1706814109389'
+  alias: Notifications P1P LED indicator
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: offline
+    id: Offline
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: calibrating_extrusion_flow
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: filament_loading
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: calibrating_extrusion
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: identifying_build_plate_type
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: homing_toolhead
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: calibrating_motor_noise
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: auto_bed_leveling
+    id: Yellow
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_user
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_cutter_error
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_low_fan_speed_heat_break
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: changing_filament
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: m400_pause
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_nozzle_temperature_malfunction
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_skipped_step
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_front_cover_falling
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_ams_lost
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_user_gcode
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_first_layer_error
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_filament_runout
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_nozzle_clog
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_nozzle_filament_covered_detected
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_chamber_temperature_control_error
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: paused_heat_bed_temperature_malfunction
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: cleaning_nozzle_tip
+    id: Blue
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: printing
+    id: Green
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: heatbed_preheating
+    id: Red
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: checking_extruder_temperature
+    id: Red
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: heating_hotend
+    id: Red
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: cooling_chamber
+    id: Teal
+  - platform: state
+    entity_id:
+    - sensor.p1p_current_stage
+    to: idle
+    id: Turquoise
+  - platform: numeric_state
+    entity_id:
+    - sensor.p1p_print_progress
+    above: 75
+    id: Green
+  - platform: numeric_state
+    entity_id:
+    - sensor.p1p_print_progress
+    above: 0
+    id: Green
+  - platform: numeric_state
+    entity_id:
+    - sensor.p1p_print_progress
+    above: 25
+    id: Green
+  - platform: numeric_state
+    entity_id:
+    - sensor.p1p_print_progress
+    above: 50
+    id: Green
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_select.mode_select
+      state: Nighttime
+    - condition: state
+      entity_id: input_select.mode_select
+      state: Morning
+    - condition: state
+      entity_id: input_select.mode_select
+      state: Daytime
+    - condition: state
+      entity_id: input_select.mode_select
+      state: Dusk
+    - condition: state
+      entity_id: input_select.mode_select
+      state: Evening
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Red
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_name: red
+        target:
+          entity_id: light.ledindicator_indicator
+    - conditions:
+      - condition: trigger
+        id:
+        - Yellow
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_name: yellow
+        target:
+          entity_id: light.ledindicator_indicator
+    - conditions:
+      - condition: trigger
+        id:
+        - Red
+        - Blue
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_name: blue
+        target:
+          entity_id: light.ledindicator_indicator
+    - conditions:
+      - condition: trigger
+        id:
+        - Green
+      sequence:
+      - choose:
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.p1p_print_progress
+            below: 25
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              color_name: green
+              brightness_pct: 30
+            target:
+              entity_id: light.ledindicator_indicator
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.p1p_print_progress
+            below: 50
+            above: 25
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              color_name: green
+              brightness_pct: 50
+            target:
+              entity_id: light.ledindicator_indicator
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.p1p_print_progress
+            below: 75
+            above: 50
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              color_name: green
+              brightness_pct: 72
+            target:
+              entity_id: light.ledindicator_indicator
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.p1p_print_progress
+            above: 75
+          sequence:
+          - service: light.turn_on
+            metadata: {}
+            data:
+              color_name: green
+              brightness_pct: 100
+            target:
+              entity_id: light.ledindicator_indicator
+    - conditions:
+      - condition: trigger
+        id:
+        - Turquoise
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_name: turquoise
+        target:
+          entity_id: light.ledindicator_indicator
+    - conditions:
+      - condition: trigger
+        id:
+        - Teal
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_name: teal
+        target:
+          entity_id: light.ledindicator_indicator
+    - conditions:
+      - condition: trigger
+        id:
+        - Offline
+      sequence:
+      - service: light.turn_off
+        metadata: {}
+        data:
+          transition: 60
+        target:
+          entity_id: light.ledindicator_indicator
+    enabled: true
+  mode: single
+- id: '1706848611986'
+  alias: Front Door unlock
+  description: 'NFC tag in mailbox and/or Android Auto turns off unlocks as long as
+    Matt is in Home Zone. '
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.pixel_6_android_auto
+    from: 'on'
+    to: 'off'
+    id: unlock
+  - platform: tag
+    tag_id: c1b1e2c9-875e-445e-bb6d-38dd17bedbf1
+    id: unlock
+  condition:
+  - condition: zone
+    entity_id: device_tracker.matt_pixel
+    zone: zone.home
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - unlock
+      sequence:
+      - service: lock.unlock
+        metadata: {}
+        data: {}
+        target:
+          entity_id: lock.front_door
+  mode: single
+- id: '1708221717263'
+  alias: 'Notification Send ETA '
+  description: Activates script Notification S Send ETA
+  trigger:
+  - platform: state
+    entity_id:
+    - input_button.send_eta
+    to:
+  condition: []
+  action:
+  - service: script.notification_travel_time
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1710122362928'
+  alias: Service Zigbee Device Joined Notification
+  description: 'Allows control of Zigbee 2 MQTT through Home Assistant UI
+
+
+    '
+  trigger:
+  - platform: mqtt
+    topic: zigbee2mqtt/bridge/event
+  condition:
+  - condition: template
+    value_template: '{{trigger.payload_json.type == "device_interview" and trigger.payload_json.data.status
+      == "successful" and trigger.payload_json.data.supported}}'
+  action:
+  - service: persistent_notification.create
+    data_template:
+      title: Device joined the Zigbee2MQTT network
+      message: 'Name: {{trigger.payload_json.data.friendly_name}}, Vendor: {{trigger.payload_json.data.definition.vendor}},
+        Model: {{trigger.payload_json.data.definition.model}}, Description: {{trigger.payload_json.data.definition.description}}'
+  mode: single
+- id: zigbee2mqtt_create_notification_on_successful_interview
+  alias: Service Zigbee Device Joined Notification
+  description: 'Allows control of Zigbee 2 MQTT through Home Assistant UI
+
+
+    '
+  trigger:
+  - platform: mqtt
+    topic: zigbee2mqtt/bridge/event
+  condition:
+  - condition: template
+    value_template: '{{trigger.payload_json.type == "device_interview" and trigger.payload_json.data.status
+      == "successful" and trigger.payload_json.data.supported}}'
+  action:
+  - service: persistent_notification.create
+    data_template:
+      title: Device joined the Zigbee2MQTT network
+      message: 'Name: {{trigger.payload_json.data.friendly_name}}, Vendor: {{trigger.payload_json.data.definition.vendor}},
+        Model: {{trigger.payload_json.data.definition.model}}, Description: {{trigger.payload_json.data.definition.description}}'
+- id: '1710455177499'
+  alias: '*Lights bathroom'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.lights_h_bathroom_wasp
+    to: 'off'
+    id: Wasp cleared
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 8
+  - platform: state
+    entity_id:
+    - input_boolean.lights_h_bathroom_wasp
+    to: 'on'
+    id: 'Wasp detected '
+  condition:
+  - condition: state
+    entity_id: input_boolean.bathroom_automation_bypass
+    state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - 'Motion detected '
+        - 'Wasp detected '
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.bathroom_ceiling_light
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - Wasp cleared
+      sequence:
+      - service: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id:
+          - light.bathroom_ceiling_light
+  mode: single
+- id: '1710456407963'
+  alias: '*Lights hallway '
+  description: This uses the tapo motion through the matter integration. Detected
+    =on and cleared =off
+  trigger:
+  - type: occupied
+    platform: device
+    device_id: f8b52b75abcb5520d64e09099de77597
+    entity_id: d4410c3a68168f17df68e1cb9e4760d6
+    domain: binary_sensor
+    id: Detected
+  - type: not_occupied
+    platform: device
+    device_id: f8b52b75abcb5520d64e09099de77597
+    entity_id: d4410c3a68168f17df68e1cb9e4760d6
+    domain: binary_sensor
+    id: Cleared
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Detected
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.hall_light
+    - conditions:
+      - condition: trigger
+        id:
+        - Cleared
+      sequence:
+      - service: light.turn_off
+        metadata: {}
+        data:
+          transition: 5
+        target:
+          entity_id: light.hall_light
+  mode: single
+- id: '1710718225531'
+  alias: 'Energy Ohmhour over '
+  description: 'Turn off devices after ohm hours '
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.ohmconnect_status
+    from: Active
+    to: Inactive
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.sheet_closet
+      - switch.6strip_floor_lamp_6
+      - switch.kitchen_larder_switch
+      - switch.6strip_outlet_1
+      - switch.6strip_outlet_2
+      - switch.6strip_outlet_4
+      - switch.6strip_outlet_5
+    data: {}
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.headboard_strip
+      - light.bedroom_switch
+    data: {}
+  - service: climate.turn_off
+    target:
+      entity_id:
+      - climate.office
+    data: {}
+  - service: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: 'off'
+    target:
+      entity_id: climate.office
+  mode: single
+- id: '1710757341769'
+  alias: Lights S Bathroom Wasp
+  description: ''
+  use_blueprint:
+    path: AlexanderBabel/occupancy.yaml
+    input:
+      door_sensor: binary_sensor.bathroom_contact_sensor_contact
+      motion_sensor: binary_sensor.bathroom_motion_group
+      motion_sensor_delay: 10
+      occupancy_helper: input_boolean.lights_h_bathroom_wasp
+      last_motion_helper: input_datetime.lights_h_bathroom_wasp_time
+- id: '1711833898063'
+  alias: Washing machine status tracker
+  description: "on when > 5w for 45 sec\noff when < 5w for 5 min\naction when off
+    \n  turn off ib.running\n  turn on ib.complete\naction when on\n  turn on ib.running"
+  use_blueprint:
+    path: sbyx/notify-or-do-something-when-an-appliance-like-a-dishwasher-or-washing-machine-finishes.yaml
+    input:
+      power_sensor: sensor.laundry_room_washing_machine_outlet_power
+      starting_hysteresis: 2.5
+      actions:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_name: red
+        target:
+          entity_id: light.laundry_ceiling
+      - service: script.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: script.washing_machine_notification
+      - service: automation.turn_off
+        metadata: {}
+        data:
+          stop_actions: true
+        target:
+          entity_id: automation.yama_laundry_room
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - binary_sensor.washing_machine_door_contact
+          from: 'off'
+          to: 'on'
+          id: wm door opened
+        - platform: numeric_state
+          entity_id:
+          - sensor.laundry_room_dryer_outlet_power
+          above: 5
+          id: Dryer starts
+      - service: light.turn_on
+        metadata: {}
+        data:
+          color_temp: 405
+        target:
+          entity_id: light.laundry_ceiling
+      - service: automation.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: automation.yama_laundry_room
+      - service: script.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: script.washing_machine_notification
+      pre_actions: []
+      finishing_threshold: 1
+      finishing_hysteresis: 4
+- id: '1713496713807'
+  alias: '*Random Record'
+  description: ''
+  trigger:
+  - platform: conversation
+    command:
+    - what record should I listen to
+  - platform: state
+    entity_id:
+    - input_button.run_script
+    to:
+  - platform: state
+    entity_id:
+    - input_button.run
+    to:
+  condition: []
+  action:
+  - service: command_line.reload
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 500
+  - service: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.91
+    target:
+      device_id: 2a595367a3ed2cc714ff01b5a152e4cb
+  - service: tts.cloud_say
+    metadata: {}
+    data:
+      cache: false
+      entity_id: media_player.main
+      message: '{{ states(''sensor.random_discogs'')  }}
+
+        '
+  mode: single
+- id: '1714011147243'
+  alias: Dog Tracker button
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_button.enter_dog_consumption
+    to:
+  condition: []
+  action:
+  - service: notify.mobile_app_pixel_6
+    data:
+      message: '"Billy consumed {{states(''input_number.dog_food_selection_quantity'')
+        + " " + states(''sensor.dog_food_current_selection'')+"s" }}"
+
+        '
+      title: Dog Consumption Tracker
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: script.reset_dog_tracker
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1714011769819'
+  alias: Tag Acana freeze dried is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 4f8ac193-93e6-4cf2-948f-71564b9c2fd3
+    id: Acana Freeze Dried
+  - platform: state
+    entity_id:
+    - sensor.dog_food_current_selection
+    to:
+  condition: []
+  action:
+  - service: input_select.select_option
+    metadata: {}
+    data:
+      option: '{{ states(''input_select.dog_consumption'') }}
+
+        '
+    target:
+      entity_id: input_select.dog_consumption
+  - service: rest_command.tag_scanned
+    data: {}
+  mode: single
+- id: '1714012248695'
+  alias: Tag Acana freeze dried is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 4f8ac193-93e6-4cf2-948f-71564b9c2fd3
+  condition: []
+  action:
+  - service: input_select.select_option
+    metadata: {}
+    data:
+      option: Acana Freeze Dried
+    target:
+      entity_id: input_select.dog_consumption
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - service: script.reset_dog_tracker
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1714379648725'
+  alias: Cast to office chromecast
+  description: ''
+  use_blueprint:
+    path: kind3r/cast-and-re-cast-a-lovelace-view-to-a-google-hub.yaml
+    input:
+      player: media_player.old_chromecast
+      dashboard: office-dashboard/
+      view: ''

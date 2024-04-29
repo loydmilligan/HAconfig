@@ -1,0 +1,31 @@
+fan:
+- platform: template
+  fans:
+    bedroom_fan:
+      friendly_name: "Bedroom Fan"
+      unique_id: PAR0002
+      value_template: "{{ states('input_boolean.bedroom_fan_state') }}"
+      percentage_template: "{{ states('input_number.bedroom_fan_percentage') }}"
+      oscillating_template: "{{ states('input_select.bedroom_fan_osc') }}"
+      turn_on:
+        service: script.bedroom_fan_on
+      turn_off:
+        service: script.bedroom_fan_off
+      set_percentage:
+        service: script.1699075929282
+        data:
+          percentage: "{{ percentage }}"
+      set_oscillating:
+        service: script.bedroom_fan_oscillating
+        data:
+          oscillating: "{{ oscillating }}"
+      speed_count: 3
+
+input_boolean:
+  bedroom_fan_state:
+  
+input_select:
+  bedroom_fan_osc:
+    options:
+      - "True"
+      - "False"

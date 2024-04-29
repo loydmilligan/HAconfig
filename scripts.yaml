@@ -1,0 +1,518 @@
+unlock_door_notification:
+  alias: 'Unlock door notification '
+  use_blueprint:
+    path: homeassistant/confirmable_notification.yaml
+    input:
+      notify_device: b908c3b493d1ca2e91282f0a4498046e
+      confirm_action:
+      - service: lock.unlock
+        data: {}
+        target:
+          entity_id: lock.front_door
+      title: 'Welcome home '
+      message: Unlock front door
+      confirm_text: 'Yes '
+      dismiss_text: 'No'
+      dismiss_action:
+      - service: notify.mobile_app_motorola_razr_plus_2023
+        data:
+          title: Alert
+          message: Someone made me unlock the front door
+  icon: mdi:lock-question
+bedroom_fan_power:
+  alias: Bedroom Fan power
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      command: power
+      device: Bf
+    target:
+      entity_id:
+      - remote.bedroom_broadlink_remote
+  mode: single
+  icon: mdi:fan
+bedroom_fan_speed:
+  alias: Bedroom Fan speed
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: speed
+    target:
+      entity_id:
+      - remote.bedroom_broadlink_remote
+  mode: single
+  icon: mdi:fan-chevron-up
+bedroom_fan_oscillate:
+  alias: 'Bedroom Fan oscillate '
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: osc
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: input_select.select_option
+    data:
+      option: '{{ oscillating }}'
+    target:
+      entity_id: input_select.bedroom_fan_osc
+  mode: single
+  icon: mdi:rotate-360
+gate_check:
+  alias: Gate check
+  sequence:
+  - if:
+    - condition: state
+      entity_id: binary_sensor.pet_stopper_door
+      state: 'on'
+    then:
+    - service: tts.cloud_say
+      data:
+        cache: false
+        message: The dog gate is open
+        entity_id: media_player.laundry_room_nest
+    else:
+    - service: tts.cloud_say
+      data:
+        cache: false
+        message: The dog gate is closed
+        entity_id: media_player.laundry_room_nest
+  mode: single
+  icon: mdi:dog-service
+fan_speed_decrease:
+  alias: Fan speed decrease
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: speed
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  mode: single
+fan_speed_increase:
+  alias: Fan speed increase
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: speed
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: speed
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  mode: single
+'1699075929282':
+  alias: Fan Set Speed
+  sequence:
+  - service: input_number.set_value
+    data:
+      value: '{{ percentage }}'
+    target:
+      entity_id: input_number.bedroom_fan_percentage
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_number.bedroom_fan_percentage
+        state: '66.0'
+      sequence:
+      - if:
+        - condition: state
+          entity_id: input_number.bedroom_fan_percentage_old_value
+          state: '33.0'
+        then:
+        - service: script.fan_speed_increase
+          data: {}
+        - service: input_number.set_value
+          data:
+            value: 66
+          target:
+            entity_id: input_number.bedroom_fan_percentage_old_value
+        else:
+        - if:
+          - condition: state
+            entity_id: input_number.bedroom_fan_percentage_old_value
+            state: '100.0'
+          then:
+          - service: script.fan_speed_decrease
+            data: {}
+          - service: input_number.set_value
+            data:
+              value: 66
+            target:
+              entity_id: input_number.bedroom_fan_percentage_old_value
+    - conditions:
+      - condition: state
+        entity_id: input_number.bedroom_fan_percentage
+        state: '100.0'
+      sequence:
+      - if:
+        - condition: state
+          entity_id: input_number.bedroom_fan_percentage_old_value
+          state: '33.0'
+        then:
+        - service: script.fan_speed_decrease
+          data: {}
+        - service: input_number.set_value
+          data:
+            value: 100
+          target:
+            entity_id: input_number.bedroom_fan_percentage_old_value
+        else:
+        - if:
+          - condition: state
+            entity_id: input_number.bedroom_fan_percentage_old_value
+            state: '66.0'
+          then:
+          - service: script.fan_speed_increase
+            data: {}
+          - service: input_number.set_value
+            data:
+              value: 100
+            target:
+              entity_id: input_number.bedroom_fan_percentage_old_value
+    - conditions:
+      - condition: state
+        entity_id: input_number.bedroom_fan_percentage
+        state: '33.0'
+      sequence:
+      - if:
+        - condition: state
+          entity_id: input_number.bedroom_fan_percentage_old_value
+          state: '66.0'
+        then:
+        - service: script.fan_speed_decrease
+          data: {}
+        - service: input_number.set_value
+          data:
+            value: 33
+          target:
+            entity_id: input_number.bedroom_fan_percentage_old_value
+        else:
+        - if:
+          - condition: state
+            entity_id: input_number.bedroom_fan_percentage_old_value
+            state: '100.0'
+          then:
+          - service: script.fan_speed_increase
+            data: {}
+          - service: input_number.set_value
+            data:
+              value: 33
+            target:
+              entity_id: input_number.bedroom_fan_percentage_old_value
+    default: []
+  mode: single
+  icon: mdi:fan-plus
+bedroom_fan_on:
+  alias: Bedroom fan on
+  sequence:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id:
+      - switch.bedroom_fan_outlet_switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.bedroom_fan_outlet_switch
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      command: power
+      device: Bf
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.bedroom_fan_state
+  - service: input_number.set_value
+    data:
+      value: 100
+    target:
+      entity_id: input_number.bedroom_fan_percentage
+  mode: single
+  icon: mdi:power
+bedroom_fan_off:
+  alias: Bedroom fan off
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: power
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.bedroom_fan_state
+  mode: single
+  icon: mdi:power-off
+bedroom_fan_oscillating:
+  alias: Bedroom fan oscillating
+  sequence:
+  - service: remote.send_command
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
+      device: Bf
+      command: osc
+    target:
+      entity_id: remote.bedroom_broadlink_remote
+  mode: single
+  icon: mdi:arrow-oscillating
+'1704098465834':
+  alias: Calendar Agenda
+  sequence:
+  - service: calendar.get_events
+    target:
+      entity_id:
+      - calendar.get_smart
+    data:
+      duration:
+        hours: 48
+    response_variable: agenda
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.calendar_agenda_testing
+    data:
+      value: '{{ agenda[''calendar.get_smart''][''events''], event }}"'
+p1p_scene_toggle:
+  alias: P1P scene toggle
+  use_blueprint:
+    path: panhans/scene_toggle.yaml
+    input:
+      area: p1p_cabinet
+toggle_kitchen_lights:
+  alias: 'Toggle - kitchen lights '
+  use_blueprint:
+    path: panhans/scene_toggle.yaml
+    input:
+      transition: 10
+      use_static_order: true
+      excluded_scenes: []
+      included_scenes:
+      - scene.new_scene
+      - scene.lights_kitchen_2
+      - scene.lights_kitchen_all_on
+      - scene.lights_kitchen_all_off
+family_room_floor_lamp_toggle:
+  alias: Family Room floor lamp toggle
+  use_blueprint:
+    path: panhans/scene_toggle.yaml
+    input:
+      included_scenes:
+      - scene.new_scene_2
+      - scene.floor_lamp_off_duplicate
+  icon: mdi:floor-lamp
+notification_travel_time:
+  alias: Notification S Send ETA
+  sequence:
+  - service: notify.mobile_app_motorola_razr_plus_2023
+    data:
+      message: "Matt is on his way home and is {{ states('sensor.google_travel_time')
+        }} min away. \n"
+      title: headsup!
+    enabled: true
+  - service: notify.mobile_app_matt_pixel
+    data:
+      message: "Matt is on his way home and is {{ states('sensor.google_travel_time')
+        }} min away. \n"
+      title: headsup!
+    enabled: false
+  mode: single
+  icon: mdi:car
+announcement_with_user_input:
+  alias: Announcement with user input
+  use_blueprint:
+    path: balloob/announce-text-to-speech-on-media-player.yaml
+    input:
+      text_to_speech_engine: tts.piper
+      media_player:
+      - media_player.bedroom_display
+add_to_do:
+  alias: Add to do
+  use_blueprint:
+    path: balloob/add-to-do-item.yaml
+    input:
+      to_do_list: todo.shopping_list
+      item_label: Mash
+washing_machine_notification:
+  alias: Washing Machine notification
+  use_blueprint:
+    path: samuelthng/notifications.yaml
+    input:
+      notify_device:
+      - 3484214f2cc53fe4aacee427dc2a22c8
+      - b908c3b493d1ca2e91282f0a4498046e
+      title: Washing machine cycle complete
+      message: Put laundry in Dryer
+      confirm_text: Done
+      confirm_option_mode: action
+      confirm_action: []
+      dismiss_text: Dismiss
+      dismiss_option_mode: action
+      timeout:
+        hours: 0
+        minutes: 30
+        seconds: 0
+      timeout_action:
+      - service: script.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: script.washing_machine_notification
+      clear_on_timeout: true
+      car_ui: true
+      channel: Reminders
+      dismiss_enabled: false
+      enable_icon_color: true
+      icon_color:
+      - 240
+      - 143
+      - 102
+      icon: mdi:washing-machine-alert
+      confirm_enabled: false
+  icon: fab:android
+homething_test:
+  alias: '*homething test'
+  sequence:
+  - service: tts.speak
+    metadata: {}
+    data:
+      cache: true
+      media_player_entity_id: media_player.bedroom_display
+      message: script activated by homething
+  mode: single
+colors:
+  alias: colors
+  sequence:
+  - service: light.turn_on
+    metadata: {}
+    data:
+      effect: candle
+    target:
+      entity_id:
+      - light.bathroom_ceiling_light
+      - light.bedroom_switch
+      - light.hall_light
+      - light.laundry_ceiling
+  mode: single
+off_script:
+  alias: Off Script
+  sequence:
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.bathroom_ceiling_light
+      - light.bedroom_switch
+      - light.hall_light
+      - light.laundry_ceiling
+    data:
+      transition: 3
+  mode: single
+random_record:
+  alias: Random record
+  sequence:
+  - service: command_line.reload
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: tts.cloud_say
+    metadata: {}
+    data:
+      cache: false
+      entity_id: media_player.main
+      message: '{{ states(''sensor.random_discogs'')  }}
+
+        '
+  mode: single
+notify_p1p_pause:
+  alias: notify p1p  pause
+  use_blueprint:
+    path: homeassistant/confirmable_notification.yaml
+    input:
+      notify_device: b908c3b493d1ca2e91282f0a4498046e
+      title: P1P needs attention
+      message: '"the P1P is {{states(''sensor.p1p_print_status'') }}"
+
+        '
+      confirm_text: Resume
+      confirm_action:
+      - service: button.press
+        metadata: {}
+        data: {}
+        target:
+          entity_id: button.p1p_resume_printing
+      dismiss_text: Stop
+      dismiss_action:
+      - service: button.press
+        metadata: {}
+        data: {}
+        target:
+          entity_id: button.p1p_stop_printing
+  icon: mdi:timer-sand-paused
+reset_dog_tracker:
+  alias: reset dog tracker
+  sequence:
+  - service: input_select.select_option
+    target:
+      entity_id: input_select.dog_consumption
+    data:
+      option: '[Scan Item]'
+  - service: input_number.set_value
+    metadata: {}
+    data:
+      value: 1
+    target:
+      entity_id: input_number.dog_food_selection_quantity
+  mode: single
+  icon: mdi:checkbox-blank-outline

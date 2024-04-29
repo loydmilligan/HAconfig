@@ -1,0 +1,54 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+homeassistant:
+  packages: !include_dir_named packages
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /www/community/hass-hue-icons/hass-hue-icons.js
+    - /www/community/custom-icons/custom-icons.js
+    - /hacsfiles/hass-hue-icons/hass-hue-icons.js
+    - /www/community/decluttering-card/decluttering-card.js
+    - /local/hass-hue-icons.js
+lovelace:
+  mode: storage
+python_script:
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies: 127.0.0.1
+  
+template:
+  - binary_sensor:
+      - name: "View playing"
+        device_class: running
+        unique_id: PAR0003
+        icon: mdi:television
+        state: >
+          {{ is_state('media_player.view', 'playing') }}
+  - sensor:
+     - name: Disogs random record URL
+       unique_id: PAR0062
+       state: |
+          {{ state_attr('sensor.discogs_info_random_record','cover_image') }}
+  - image:
+      - name: "Discogs Random Record Cover"
+        unique_id: PAR0063
+        url: |
+          {{ state_attr('sensor.discogs_info_random_record','cover_image') }}
+
+rest_command:
+  tag_scanned:
+    url: "http://192.168.4.255:5678/webhook/d6d0e3af-97b0-4ae0-9c80-ba85613bd39c"
+    method: post
+    payload: |
+      {"treat":"{{ states('input_select.dog_consumption') }}"}
+    content_type:  'application/json; charset=utf-8'
+
+

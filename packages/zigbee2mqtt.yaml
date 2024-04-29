@@ -1,0 +1,93 @@
+mqtt:
+  sensor:
+    - name: Zigbee2mqtt Networkmap
+      # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
+      state_topic: zigbee2mqtt/bridge/response/networkmap
+      value_template: >-
+        {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
+      # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
+      json_attributes_topic: zigbee2mqtt/bridge/response/networkmap
+      json_attributes_template: "{{ value_json.data.value | tojson }}"
+    - name: Hue Tap Action
+      state_topic: "zigbee2mqtt/Hue tap"
+      value_template: "{{ value_json.action }}"
+      unique_id: PAR0007
+      device:
+        model: "Hue tap (8718696743133)"
+        manufacturer: Philips
+        identifiers: zigbee2mqtt_0x0000000000400b4b
+        
+    - name: Hallway tap dial action
+      state_topic: 'zigbee2mqtt/Hallway tap dial '
+      value_template: "{{ value_json.action }}"
+      unique_id: PAR0008
+      device:
+        identifiers: zigbee2mqtt_0x001788010d7d24e3
+        manufacturer: Philips
+        model: "Hue Tap dial switch (8719514440937/8719514440999)"
+  button: 
+    - name: Zigbee2mqtt bridge permit join
+      unique_id: PAR0006
+      command_topic: zigbee2mqtt/bridge/request/permit_join
+      icon: mdi:autorenew
+      payload_press: "true"
+      
+input_number:
+  zigbee2mqtt_join_minutes:
+    name: "Zigbee2MQTT join minutes"
+    initial: 2
+    min: 1
+    max: 5
+    step: 1
+    mode: slider
+
+# Input text to input Zigbee2MQTT friendly_name for scripts
+input_text:
+  zigbee2mqtt_old_name:
+    name: Zigbee2MQTT Old Name
+    initial: ""
+    icon: "mdi:moon-full"
+  zigbee2mqtt_new_name:
+    name: Zigbee2MQTT New Name
+    initial: ""
+    icon: "mdi:moon-new"
+  zigbee2mqtt_remove:
+    name: Zigbee2MQTT Remove
+    initial: ""
+    icon: "mdi:trash-can"
+
+# Input boolean to set the force remove flag for devices
+input_boolean:
+  zigbee2mqtt_force_remove:
+    name: Zigbee2MQTT Force Remove
+    initial: false
+    icon: mdi:alert-remove
+
+# Scripts for renaming & removing devices
+script:
+  zigbee2mqtt_rename:
+    alias: Zigbee2MQTT Rename
+    icon: "mdi:pencil"
+    sequence:
+      service: mqtt.publish
+      data_template:
+        topic: zigbee2mqtt/bridge/request/device/rename
+        payload_template: >-
+          {
+            "from": "{{ states.input_text.zigbee2mqtt_old_name.state | string }}",
+            "to": "{{ states.input_text.zigbee2mqtt_new_name.state | string }}"
+          }
+  zigbee2mqtt_remove:
+    alias: Zigbee2MQTT Remove
+    icon: "mdi:trash-can"
+    sequence:
+      service: mqtt.publish
+      data_template:
+        topic: zigbee2mqtt/bridge/request/device/remove
+        payload_template: >-
+          {
+            "id": "{{ states.input_text.zigbee2mqtt_remove.state | string }}",
+            "force": {% if states.input_boolean.zigbee2mqtt_force_remove.state == "off" %}false{% else %}true{% endif %}
+          }
+
+
